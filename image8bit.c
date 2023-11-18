@@ -10,11 +10,11 @@
 /// 2013, 2023
 
 // Student authors (fill in below):
-// NMec:  Name:
+// NMec:  98178               Name: Francisco Fernandes
+//          
 // 
 // 
-// 
-// Date:
+// Date: 18/11/2023
 //
 
 #include "image8bit.h"
@@ -171,7 +171,35 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
   assert (width >= 0);
   assert (height >= 0);
   assert (0 < maxval && maxval <= PixMax);
-  // Insert your code here!
+  // CODED
+  
+  Image new_img = (Image)malloc(sizeof(struct image));
+
+  if (new_img == NULL) {
+    perror("ImageCreate");
+    return NULL;
+  }
+
+  new_img->pixel = (uint8*)malloc(width*height*sizeof(uint8));
+
+  // se a alocação de memória falhou
+  if (new_img->pixel == NULL){
+    perror("ImageCreate");
+    free(new_img); // liberta tudo o que tinhamos atribuido até agora
+    return NULL; // retorna a imagem com NULL pixeis
+  }
+  
+  new_img->width = width;
+  new_img->height = height;
+  new_img->maxval = maxval;
+
+  // se ouve alocação -> colocar todos os pixeis a preto
+  for(int i = 0; i < width * height; ++i){
+    new_img->pixel[i] = 0;
+  }
+
+  return new_img;
+
 }
 
 /// Destroy the image pointed to by (*imgp).
@@ -181,7 +209,22 @@ Image ImageCreate(int width, int height, uint8 maxval) { ///
 /// Should never fail, and should preserve global errno/errCause.
 void ImageDestroy(Image* imgp) { ///
   assert (imgp != NULL);
-  // Insert your code here!
+  // CODED
+
+  if (*imgp != NULL){ // imagem está lá
+    
+    // O conteúdo apontado pelo ponteiro(imagem) que aponta para pixel é libertado
+    free((*imgp)->pixel);
+    // coloca o ponteiro a apontar para null
+    (*imgp)->pixel = NULL;
+
+    // Liberta todo o contúdo apontado pelo ponteiro imgp
+    free(*imgp);
+    // coloca imgp a apontar para NULL
+    *imgp = NULL;
+
+  }
+
 }
 
 
@@ -320,8 +363,13 @@ int ImageValidRect(Image img, int x, int y, int w, int h) { ///
 // The returned index must satisfy (0 <= index < img->width*img->height)
 static inline int G(Image img, int x, int y) {
   int index;
-  // Insert your code here!
   assert (0 <= index && index < img->width*img->height);
+  // CODED
+  int w = img->width;
+  int h = img->height;
+
+  index = (((y-1) * w ) - 1) + x; 
+
   return index;
 }
 
@@ -400,7 +448,29 @@ void ImageBrighten(Image img, double factor) { ///
 /// On failure, returns NULL and errno/errCause are set accordingly.
 Image ImageRotate(Image img) { ///
   assert (img != NULL);
-  // Insert your code here!
+/*  
+  // CODED
+  Image rotated_img;
+
+  rotated_img->width = img->width;
+  rotated_img->height = img->height;
+
+  rotated_img->pixel = (uint8*)malloc(rotated_img->width * rotated_img->height * sizeof(uint8));
+
+  for (int y = 0; y < rotated_img->height; ++y){
+    for (int x = 0; x < rotated_img->width; ++x){
+
+      int newX = y;
+      int newY = rotated_img->height - 1 - x;
+
+      // Copy pixel from the original image to the rotated image
+      rotated_img->pixel[G(rotated_img, newX, newY)] = img->pixel[newY * img->width + newX];
+
+    } 
+  }
+
+  return rotated_img;
+*/
 }
 
 /// Mirror an image = flip left-right.
