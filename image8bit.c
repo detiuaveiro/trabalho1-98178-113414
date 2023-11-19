@@ -463,7 +463,7 @@ void ImageThreshold(Image img, uint8 thr) { ///
 /// darken the image if factor<1.0.
 void ImageBrighten(Image img, double factor) { ///
   assert (img != NULL);
-  // ? assert (factor >= 0.0);
+  assert (factor >= 0.0);
   // CODED
 
   for (int i = 0; i < img->width * img->height; ++i) {
@@ -471,7 +471,7 @@ void ImageBrighten(Image img, double factor) { ///
     double brightened_val = img->pixel[i] * factor;
 
     // Saturar no maxval
-    uint8 saturated_val = (brightened_val > img->maxval) ? img->maxval : (uint8)brightened_val;
+    uint8 saturated_val = (brightened_val > img->maxval) ? img->maxval : (uint8)round(brightened_val);
 
     img->pixel[i] = saturated_val;
   } 
