@@ -336,7 +336,31 @@ int ImageMaxval(Image img) { ///
 /// *max is set to the maximum.
 void ImageStats(Image img, uint8* min, uint8* max) { ///
   assert (img != NULL);
-  // Insert your code here!
+  // CODED With ImageGetPixel() to test 'G' that is inside of it
+
+  // perguntar se perror necessário ou se redundante por causa do assert
+  if (img == NULL) {
+    perror("ImageStats");
+    return;
+  }
+
+  *min = ImageGetPixel(img,0,0);
+  *max = ImageGetPixel(img,0,0);
+
+  for(int i = 0; i < img->height; ++i){
+    for(int j = 0; j < img->width; ++j){
+
+      if(ImageGetPixel(img,i,j) < *min){
+        *min = ImageGetPixel(img,i,j);
+      }
+
+      if(ImageGetPixel(img,i,j) > *max){
+        *max = ImageGetPixel(img,i,j);
+      }
+
+    }
+  }
+
 }
 
 /// Check if pixel position (x,y) is inside img.

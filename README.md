@@ -50,7 +50,7 @@ Sugere-se o desenvolvimento progressivo pela seguinte ordem:
 3. Completar a função interna `G`,
    que é usada por `ImageSetPixel` e `ImageGePixel`.
 4. Completar `ImageStats`.
-   Se usar `ImageGePixel`, permitirá testar `G`.
+   Se usar `ImageGetPixel`, permitirá testar `G`.
    Testar com `./imageTool test/original.pgm info`.
 5. Completar `ImageNegative`, `ImageThreshold`, `ImageBrighten`.
 6. Completar `ImageValidRect`.
