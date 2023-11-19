@@ -466,18 +466,15 @@ void ImageBrighten(Image img, double factor) { ///
   // ? assert (factor >= 0.0);
   // CODED
 
-  for(int i = 0; i < (img->height*img->width); ++i){
+  for (int i = 0; i < img->width * img->height; ++i) {
     
-    uint8 x = (uint8)(img->pixel[i] * factor);
+    double brightened_val = img->pixel[i] * factor;
 
-    if (x > img->maxval) {
-      img->pixel[i] = img->maxval;
-    }
-    else {
-      img->pixel[i] = x;
-    }
+    // Saturar no maxval
+    uint8 saturated_val = (brightened_val > img->maxval) ? img->maxval : (uint8)brightened_val;
 
-  }  
+    img->pixel[i] = saturated_val;
+  } 
 }
 
 
