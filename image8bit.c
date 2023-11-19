@@ -402,7 +402,7 @@ static inline int G(Image img, int x, int y) {
   int w = img->width;
   int h = img->height;
 
-  int index = (((y-1) * w ) - 1) + x; 
+  int index = y * w + x;
 
   assert (0 <= index && index < img->width*img->height);
 
