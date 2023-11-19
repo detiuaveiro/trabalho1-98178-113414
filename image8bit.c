@@ -471,7 +471,7 @@ void ImageBrighten(Image img, double factor) { ///
     double brightened_val = img->pixel[i] * factor;
 
     // Saturar no maxval
-    uint8 saturated_val = (brightened_val > img->maxval) ? img->maxval : (uint8)round(brightened_val);
+    uint8 saturated_val = (brightened_val > img->maxval) ? img->maxval : (uint8)brightened_val;
 
     img->pixel[i] = saturated_val;
   } 
