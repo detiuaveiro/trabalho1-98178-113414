@@ -442,7 +442,19 @@ void ImageNegative(Image img) { ///
 /// all pixels with level>=thr to white (maxval).
 void ImageThreshold(Image img, uint8 thr) { ///
   assert (img != NULL);
-  // Insert your code here!
+  // CODED
+
+  for(int i = 0; i < (img->height*img->width); ++i){
+
+      if (img->pixel[i] < thr){
+        img->pixel[i] = 0;
+      }
+      else {
+        img->pixel[i] = img->maxval;// duvida se img->maxval pode ser substituido por 255
+      }
+
+  }
+
 }
 
 /// Brighten image by a factor.
