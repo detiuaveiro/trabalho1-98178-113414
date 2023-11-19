@@ -398,13 +398,13 @@ int ImageValidRect(Image img, int x, int y, int w, int h) { ///
 // This internal function is used in ImageGetPixel / ImageSetPixel. 
 // The returned index must satisfy (0 <= index < img->width*img->height)
 static inline int G(Image img, int x, int y) {
-  int index;
-  assert (0 <= index && index < img->width*img->height);
   // CODED
   int w = img->width;
   int h = img->height;
 
-  index = (((y-1) * w ) - 1) + x; 
+  int index = (((y-1) * w ) - 1) + x; 
+
+  assert (0 <= index && index < img->width*img->height);
 
   return index;
 }
@@ -520,29 +520,28 @@ void ImageBrighten(Image img, double factor) { ///
 /// On failure, returns NULL and errno/errCause are set accordingly.
 Image ImageRotate(Image img) { ///
   assert (img != NULL);
-/*  
+  
   // CODED
-  Image rotated_img;
 
-  rotated_img->width = img->width;
-  rotated_img->height = img->height;
+  // Cria imagem com caracteristicas da original
+  Image new_img = ImageCreate(img->width, img->height, img->maxval);
 
-  rotated_img->pixel = (uint8*)malloc(rotated_img->width * rotated_img->height * sizeof(uint8));
+  // Atribuição de pixeis rodados
+  for (int y = 0; y < img->height; ++y) {
+    for (int x = 0; x < img->width; ++x) {
+      // Calculo das posições coorespondentes na nova imagem
+      int rotated_x = y;
+      int rotated_y = img->width - 1 - x;
 
-  for (int y = 0; y < rotated_img->height; ++y){
-    for (int x = 0; x < rotated_img->width; ++x){
+      int original_idx = G(img, x, y);
+      int rotated_idx = G(new_img, rotated_x, rotated_y);
 
-      int newX = y;
-      int newY = rotated_img->height - 1 - x;
-
-      // Copy pixel from the original image to the rotated image
-      rotated_img->pixel[G(rotated_img, newX, newY)] = img->pixel[newY * img->width + newX];
-
-    } 
+      new_img->pixel[rotated_idx] = img->pixel[original_idx];
+    }
   }
 
-  return rotated_img;
-*/
+  return new_img;
+
 }
 
 /// Mirror an image = flip left-right.
