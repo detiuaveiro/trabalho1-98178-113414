@@ -591,7 +591,25 @@ Image ImageMirror(Image img) { ///
 Image ImageCrop(Image img, int x, int y, int w, int h) { ///
   assert (img != NULL);
   assert (ImageValidRect(img, x, y, w, h));
-  // Insert your code here!
+  // CODE HERE
+
+  Image cropped_img = ImageCreate(w, h, img->maxval); // Duvida se maxval é o da imagem original
+
+  // Atribui os pixeis coorespondentes à sub imagem
+  for (int i = 0; i < h; ++i) {
+    for (int j = 0; j < w; ++j) {
+
+      // Calculo das posições coorespondentes na nova imagem
+      int original_idx = G(img, x + j, y + i);
+      int cropped_idx = G(cropped_img, j, i);
+
+      cropped_img->pixel[cropped_idx] = img->pixel[original_idx];
+      
+    }
+  }
+
+  return cropped_img;
+
 }
 
 
