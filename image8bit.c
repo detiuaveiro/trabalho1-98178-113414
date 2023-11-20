@@ -591,7 +591,7 @@ Image ImageMirror(Image img) { ///
 Image ImageCrop(Image img, int x, int y, int w, int h) { ///
   assert (img != NULL);
   assert (ImageValidRect(img, x, y, w, h));
-  // CODE HERE
+  // CODED
 
   Image cropped_img = ImageCreate(w, h, img->maxval); // Duvida se maxval é o da imagem original
 
@@ -649,7 +649,35 @@ void ImageBlend(Image img1, int x, int y, Image img2, double alpha) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
   assert (ImageValidRect(img1, x, y, img2->width, img2->height));
-  // Insert your code here!
+  // CODED
+
+  for (int i = 0; i < img2->height; ++i) {
+    for (int j = 0; j < img2->width; ++j) {
+      
+      int dest_index = G(img1, x + j, y + i);
+      int src_index = G(img2, j, i);
+
+
+      // Calculo do Blending 
+      double blended_val = (1 - alpha) * img1->pixel[dest_index] + alpha * img1->pixel[src_index];
+
+      uint8 blended_pix;
+
+      // Saturação quando over/underflow e atribuicao do valor arredondado ao pixel
+      if (blended_val > img1->maxval) {
+        blended_pix = img1->maxval;
+      }
+      else if (blended_val < 0) {
+        blended_pix = 0;
+      }
+      else {
+        blended_pix = (uint8)(blended_val+0.5);
+      }
+
+      img1->pixel[dest_index] = blended_pix;
+    }
+  }
+
 }
 
 /// Compare an image to a subimage of a larger image.
