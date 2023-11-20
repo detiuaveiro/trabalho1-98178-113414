@@ -659,7 +659,7 @@ void ImageBlend(Image img1, int x, int y, Image img2, double alpha) { ///
 
 
       // Calculo do Blending 
-      double blended_val = (1 - alpha) * img1->pixel[dest_index] + alpha * img1->pixel[src_index];
+      double blended_val = (1 - alpha) * img1->pixel[dest_index] + alpha * img2->pixel[src_index];
 
       uint8 blended_pix;
 
