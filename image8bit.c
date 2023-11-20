@@ -604,7 +604,7 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
       int cropped_idx = G(cropped_img, j, i);
 
       cropped_img->pixel[cropped_idx] = img->pixel[original_idx];
-      
+
     }
   }
 
@@ -623,7 +623,20 @@ void ImagePaste(Image img1, int x, int y, Image img2) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
   assert (ImageValidRect(img1, x, y, img2->width, img2->height));
-  // Insert your code here!
+  // CODED
+
+  // Colar img2 em img1 na posição (x, y)
+  for (int i = 0; i < img2->height; ++i) {
+    for (int j = 0; j < img2->width; ++j) {
+      
+      // Atribuição dos pixeis de origem e destino
+      int src_index = G(img2, j, i);
+      int dest_index = G(img1, x + j, y + i);
+
+      img1->pixel[dest_index] = img2->pixel[src_index];
+    }
+  }
+
 }
 
 /// Blend an image into a larger image.
