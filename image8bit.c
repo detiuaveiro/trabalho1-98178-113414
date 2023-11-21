@@ -757,7 +757,8 @@ void ImageBlur(Image img, int dx, int dy) { ///
 
   int img_width = img->width;
   int img_height = img->height;
-  int blurred_val;
+  double blurred_val;
+  uint8 blurred_pix;
 
   for (int y = 0; y < img_height; ++y) {
     for (int x = 0; x < img_width; ++x) {
@@ -783,7 +784,9 @@ void ImageBlur(Image img, int dx, int dy) { ///
         blurred_val = 0;
       }
 
-      ImageSetPixel(img, x, y, blurred_val);
+      blurred_pix = (uint8)(blurred_val+0.5);
+
+      ImageSetPixel(img, x, y, blurred_pix);
     }
   }
 
