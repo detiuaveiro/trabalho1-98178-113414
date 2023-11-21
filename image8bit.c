@@ -404,7 +404,7 @@ static inline int G(Image img, int x, int y) {
 
   int index = y * w + x;
 
-  assert (0 <= index && index < img->width*img->height);
+  assert (0 <= index && index < w * h);
 
   return index;
 }
@@ -687,7 +687,29 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
   assert (ImageValidPos(img1, x, y));
-  // Insert your code here!
+  // CODED
+
+  // Ver se a subimagem vai para além dos limites da img1 em (x, y)
+  if (x + img2->width > img1->width || y + img2->height > img1->height) {
+    return 0; // Retorna 0 (false), se não couber dentro dos limites da img maior
+  }
+
+  // Iterar sobre os pixeis da img2 comparando com os pixeis coorespondentes na img 1
+  for (int i = 0; i < img2->height; ++i) {
+    for (int j = 0; j < img2->width; ++j) {
+      int pixel_img1 = ImageGetPixel(img1, x + j, y + i); 
+      int pixel_img2 = ImageGetPixel(img2, j, i);         
+
+      // Se algum pixel não der match, retornar 0 (false)
+      if (pixel_img1 != pixel_img2) {
+        return 0;
+      }
+    }
+  }
+
+  // Todos os pixeis dão match, retornar 1 (true)
+  return 1;
+
 }
 
 /// Locate a subimage inside another image.
@@ -697,7 +719,30 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2) { ///
 int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
   assert (img1 != NULL);
   assert (img2 != NULL);
-  // Insert your code here!
+  // CODED
+
+  int img1_width = img1->width;
+  int img1_height = img1->height;
+  int img2_width = img2->width;
+  int img2_height = img2->height;
+
+  // Fazer um loop pela img1 para proucurar a img2
+  for (int y = 0; y <= img1_height - img2_height; ++y) {    //se a imagem não estiver até img1_height - img2_height
+    for (int x = 0; x <= img1_width - img2_width; ++x) {    //ou img1_width - img2_width também já não estará pois já não iria caber nos limites da imagem maior
+
+      // Ver se a subimagem faz match na posicao (x,y) atual 
+      if (ImageMatchSubImage(img1, x, y, img2)) {
+        // Atribuir a posicao de match e retornar 1 (true)
+        *px = x;
+        *py = y;
+        return 1;
+      }
+    }
+  }
+
+  // Se nao foi encontrado match, retorna 0 (false)
+  return 0;
+
 }
 
 
@@ -708,6 +753,39 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
 /// [x-dx, x+dx]x[y-dy, y+dy].
 /// The image is changed in-place.
 void ImageBlur(Image img, int dx, int dy) { ///
-  // Insert your code here!
+  // CODED
+
+  int img_width = img->width;
+  int img_height = img->height;
+  int blurred_val;
+
+  for (int y = 0; y < img_height; ++y) {
+    for (int x = 0; x < img_width; ++x) {
+      int sum = 0;
+      int count = 0;
+
+      for (int j = -dy; j <= dy; ++j) {
+        for (int i = -dx; i <= dx; ++i) {
+          int neighbor_x = x + i;
+          int neighbor_y = y + j;
+
+          if (neighbor_x >= 0 && neighbor_x < img_width &&
+              neighbor_y >= 0 && neighbor_y < img_height) {
+            sum += ImageGetPixel(img, neighbor_x, neighbor_y);
+            count++;
+          }
+        }
+      }
+
+      if (count > 0) {
+        blurred_val = sum / count;
+      } else {
+        blurred_val = 0;
+      }
+
+      ImageSetPixel(img, x, y, blurred_val);
+    }
+  }
+
 }
 
