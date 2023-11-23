@@ -791,7 +791,7 @@ void ImageBlur(Image img, int dx, int dy) { ///
         blurred_val = 0;
       }
 
-      blurred_pix = (uint8)(blurred_val);
+      blurred_pix = (uint8)(blurred_val + 0.5);
 
       ImageSetPixel(img, x, y, blurred_pix);
     }
