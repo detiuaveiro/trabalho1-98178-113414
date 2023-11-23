@@ -760,6 +760,17 @@ void ImageBlur(Image img, int dx, int dy) { ///
   double blurred_val;
   uint8 blurred_pix;
 
+  // Cria uma imagem auxiliar para guardar os valores originais
+  Image aux = ImageCreate(img_width, img_height, img->maxval);
+  
+  // Copia os valores dos pixeis da imagem original para a auxiliar
+  for (int y = 0; y < img_height; ++y) {
+    for (int x = 0; x < img_width; ++x) {
+      uint8 original_pix = ImageGetPixel(img, x, y);
+      ImageSetPixel(aux, x, y, original_pix);
+    }
+  }
+
   for (int y = 0; y < img_height; ++y) {
     for (int x = 0; x < img_width; ++x) {
       int sum = 0;
@@ -772,7 +783,7 @@ void ImageBlur(Image img, int dx, int dy) { ///
 
           if (neighbor_x >= 0 && neighbor_x < img_width &&
               neighbor_y >= 0 && neighbor_y < img_height) {
-            sum += ImageGetPixel(img, neighbor_x, neighbor_y);
+            sum += ImageGetPixel(aux, neighbor_x, neighbor_y);
             count++;
           }
         }
@@ -796,6 +807,6 @@ void ImageBlur(Image img, int dx, int dy) { ///
       ImageSetPixel(img, x, y, blurred_pix);
     }
   }
-
+  ImageDestroy(&aux);
 }
 
