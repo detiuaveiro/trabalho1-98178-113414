@@ -554,7 +554,7 @@ Image ImageRotate(Image img) { ///
 Image ImageMirror(Image img) { ///
   assert (img != NULL);
   // CODED
-
+  
   // Cria imagem com caracteristicas da original
   Image new_img = ImageCreate(img->width, img->height, img->maxval);
 
@@ -576,6 +576,7 @@ Image ImageMirror(Image img) { ///
 
 }
 
+
 /// Crop a rectangular subimage from img.
 /// The rectangle is specified by the top left corner coords (x, y) and
 /// width w and height h.
@@ -593,7 +594,7 @@ Image ImageCrop(Image img, int x, int y, int w, int h) { ///
   assert (ImageValidRect(img, x, y, w, h));
   // CODED
 
-  Image cropped_img = ImageCreate(w, h, img->maxval); // Duvida se maxval é o da imagem original
+  Image cropped_img = ImageCreate(w, h, img->maxval);
 
   // Atribui os pixeis coorespondentes à sub imagem
   for (int i = 0; i < h; ++i) {
@@ -680,6 +681,9 @@ void ImageBlend(Image img1, int x, int y, Image img2, double alpha) { ///
 
 }
 
+// Inicializar o número de comparações como zero
+int COMPS = 0;
+
 /// Compare an image to a subimage of a larger image.
 /// Returns 1 (true) if img2 matches subimage of img1 at pos (x, y).
 /// Returns 0, otherwise.
@@ -689,6 +693,7 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2) { ///
   assert (ImageValidPos(img1, x, y));
   // CODED
 
+  COMPS++;
   // Ver se a subimagem vai para além dos limites da img1 em (x, y)
   if (x + img2->width > img1->width || y + img2->height > img1->height) {
     return 0; // Retorna 0 (false), se não couber dentro dos limites da img maior
@@ -699,6 +704,8 @@ int ImageMatchSubImage(Image img1, int x, int y, Image img2) { ///
     for (int j = 0; j < img2->width; ++j) {
       int pixel_img1 = ImageGetPixel(img1, x + j, y + i); 
       int pixel_img2 = ImageGetPixel(img2, j, i);         
+
+      COMPS++;
 
       // Se algum pixel não der match, retornar 0 (false)
       if (pixel_img1 != pixel_img2) {
@@ -729,17 +736,23 @@ int ImageLocateSubImage(Image img1, int* px, int* py, Image img2) { ///
   // Fazer um loop pela img1 para proucurar a img2
   for (int y = 0; y <= img1_height - img2_height; ++y) {    //se a imagem não estiver até img1_height - img2_height
     for (int x = 0; x <= img1_width - img2_width; ++x) {    //ou img1_width - img2_width também já não estará pois já não iria caber nos limites da imagem maior
+      // Incrementa o contador a cada comparação
+      COMPS++;
 
       // Ver se a subimagem faz match na posicao (x,y) atual 
       if (ImageMatchSubImage(img1, x, y, img2)) {
+        
         // Atribuir a posicao de match e retornar 1 (true)
         *px = x;
         *py = y;
+        
+        printf("Número de comparações realizadas: %d\n", COMPS);
         return 1;
+
       }
     }
   }
-
+  printf("Número de comparações realizadas: %d\n", COMPS);
   // Se nao foi encontrado match, retorna 0 (false)
   return 0;
 
@@ -809,4 +822,5 @@ void ImageBlur(Image img, int dx, int dy) { ///
   }
   ImageDestroy(&aux);
 }
+
 
